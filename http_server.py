@@ -1,4 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import cgi
+import json
+
 import time
 
 _HOST = "10.11.43.12"
@@ -15,15 +18,29 @@ class NeuralHTTP(BaseHTTPRequestHandler):
 
         self.wfile.write(bytes("<html><body><h1>HELLO WORLD!</h1></body></html>", "utf-8"))
     
-    # Handles POST requests. For now, it just merely sends back the time in JSON
+    # Handles POST requests. It only requests JSON content
     def do_POST(self):
+        # Detect the ctype and pdict of the request
+        ctype, pdict = cgi.parse_header(self.headers.get('Content-type'))
+
+        # We refuse if the content type is not json
+        if ctype != 'application/json':
+            self.send_response(400, "Method not allowed")
+            self.end_headers()
+            self.wfile.write("POST only accepts application/json content\n".encode())
+            return
+
+        # Read the message
+        length = int(self.headers.get('Content-length'))
+        payload_string = self.rfile.read(length).decode('utf-8')
+        payload = json.loads(payload_string) if payload_string else None
+        print(payload)
+
         # Send response code (success)
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-
-        date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-        self.wfile.write(bytes('{"time":"' + date + '"}',"utf-8"))
+        self.wfile.write(bytes('{"recieved":true}',"utf-8"))
 
 # To host this server, execute the following command in your bash terminal, 
 #   in the directory of your choice:
