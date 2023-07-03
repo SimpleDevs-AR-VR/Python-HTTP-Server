@@ -15,8 +15,13 @@ python -m http.server <_PORT> -b <_HOST>
 ```
 
 ## Testing
+There are two ways to test: via Shell commands or via a 3rd-party tool like **Postman**
+
+### Via Shell
 To test these, follow these commands inside your bash terminal
 - Testing GET: `curl <_HOST>:<_PORT> -X GET`
 - Testing POST: `curl <_HOST>:<_PORT> _X POST`
 
-... Or get an app like Postman to test more robustly
+### Via Tools
+I recommend the **Postman** tool for more complicated debugging such as testing POST requests and the like: 
+[Download Postman](https://learning.postman.com/docs/getting-started/installation-and-updates/#installing-postman-on-windows)
