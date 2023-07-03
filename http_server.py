@@ -25,6 +25,10 @@ class NeuralHTTP(BaseHTTPRequestHandler):
         date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         self.wfile.write(bytes('{"time":"' + date + '"}',"utf-8"))
 
+# To test these, follow these commands inside your bash terminal
+# - Testing GET: curl <_HOST>:<_PORT> -X GET
+# - Testing POST: curl <_HOST>:<_PORT> _X POST
+
 server = HTTPServer(
     (_HOST, _PORT),
     NeuralHTTP
