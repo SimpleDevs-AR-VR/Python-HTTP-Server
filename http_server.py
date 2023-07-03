@@ -25,9 +25,15 @@ class NeuralHTTP(BaseHTTPRequestHandler):
         date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         self.wfile.write(bytes('{"time":"' + date + '"}',"utf-8"))
 
+# To host this server, execute the following command in your bash terminal, 
+#   in the directory of your choice:
+# python -m http.server <_PORT> --bind <_HOST>
+# python -m http.server <_PORT> -b <_HOST>
+
 # To test these, follow these commands inside your bash terminal
 # - Testing GET: curl <_HOST>:<_PORT> -X GET
 # - Testing POST: curl <_HOST>:<_PORT> _X POST
+# Or get an app like Postman to test more robustly
 
 server = HTTPServer(
     (_HOST, _PORT),
