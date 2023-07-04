@@ -3,6 +3,7 @@
 The code in this repository is based on the following tutorials and solutions:
 * **Basics (`basics` branch)**: [https://www.youtube.com/watch?v=DeFST8tvtuI](https://www.youtube.com/watch?v=DeFST8tvtuI)
 * **POST + JSON (`main` branch)**: [https://gist.github.com/nitaku/10d0662536f37a087e1](https://gist.github.com/nitaku/10d0662536f37a087e1b)
+* **Python + Flask**: [https://auth0.com/blog/developing-restful-apis-with-python-and-flask/](https://auth0.com/blog/developing-restful-apis-with-python-and-flask/)
 
 These might be looked at later:
 * [PUT request](https://gist.github.com/mildred/67d22d7289ae8f16cae7)
