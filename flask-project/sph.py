@@ -61,8 +61,11 @@ class SPH_SESSION:
             "frames": payload["frames"],
             "success": payload["success"]
         }
-        # Create a directory inside of the "Recordings" directory
+        # Create a directory inside of the "Recordings" directory, create "Recordings" if it doesn't exist
         os_dirname = os.path.dirname(os.path.abspath(__file__))
+        recordingDirPath = os.path.join(os_dirname,"Recordings")
+        if not os.path.exists(recordingDirPath):
+            os.mkdir(recordingDirPath)
         dirPath = os.path.join(os_dirname, "Recordings" , self.details["session_name"] + "_" + self.details["timestamp"]) + "/"
         # Create a directory inside "Recordings"
         os.mkdir(dirPath)
@@ -106,6 +109,10 @@ class SPH_PARTICLE_RECORD:
     
     def __init__(self, payload):
         self.particle_id = payload["particle_id"]
+        self.positions = []
+        self.velocities = []
+        self.densities = []
+        self.pressures = []
     
     def AddRecord(self,payload):
         timestamp = payload["timestamp"]

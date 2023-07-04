@@ -36,6 +36,30 @@ def init():
     current_session.Initialize(payload)
     return jsonify(payload)
 
+@app.route("/update", methods=['post'])
+def update():
+    # PURPOSE: Update each particle in our current session with their new position, velocity, density, and pressure
+    # Inside the payload, we are expecting the following formatting:
+    # - timestamp:float
+    # - frame:int
+    # - positions:[{x,y,z},...]
+    # - velocities:[{x,y,z},...]
+    # - densities:[...]
+    # - pressures:[{x,y,z},...]
+    payload = request.get_json()
+    for i in range(len(current_session.data)):
+        current_session.data[i].AddRecord({
+            "timestamp":payload["timestamp"],
+            "frame":payload["frame"],
+            "position":payload["positions"][current_session.data[i].particle_id],
+            "velocity":payload["velocities"][current_session.data[i].particle_id],
+            "density":payload["densities"][current_session.data[i].particle_id],
+            "pressure":payload["pressures"][current_session.data[i].particle_id]
+        })
+    return "Session updated!"
+
+
+
 @app.route("/terminate", methods=['POST'])
 def terminate():
     # PURPOSE: ending a recording session and saving all files
