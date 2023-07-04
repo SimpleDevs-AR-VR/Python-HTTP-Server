@@ -8,11 +8,16 @@ These might be looked at later:
 * [PUT request](https://gist.github.com/mildred/67d22d7289ae8f16cae7)
 
 ## Hosting
-To host this server, execute the following command in your bash terminal, in the directory of your choice:
+If you're starting from basics, all you need to do is execute the following command in your bash terminal, in the directory of your choice:
 ```sh
 python -m http.server <_PORT> --bind <_HOST>
 python -m http.server <_PORT> -b <_HOST>
 ```
+
+If you are running the flask version, do the following:
+1. Inside Command Prompt (Visual Studio Code is a little weird), `cd` to the `flask-project` folder
+2. (Need to verify) Execute the following command: `set FLASK_APP=./recorder.py`
+2. Execute the following command: `flask --app recorder run`
 
 ## Testing
 There are two ways to test: via Shell commands or via a 3rd-party tool like **Postman**

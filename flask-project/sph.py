@@ -54,7 +54,7 @@ class SPH_SESSION:
                 "pressure":p["pressure"]
             })
     
-    def conclude(self, payload):
+    def Terminate(self, payload):
         # Get the results from payload
         self.results = {
             "duration": payload["duration"],
@@ -62,7 +62,8 @@ class SPH_SESSION:
             "success": payload["success"]
         }
         # Create a directory inside of the "Recordings" directory
-        dirPath = "./Recordings/" + self.details["session_name"] + "_" + self.timestamp + "/"
+        os_dirname = os.path.dirname(os.path.abspath(__file__))
+        dirPath = os.path.join(os_dirname, "Recordings" , self.details["session_name"] + "_" + self.details["timestamp"]) + "/"
         # Create a directory inside "Recordings"
         os.mkdir(dirPath)
         # Create a subdirectory inside the newly-created folder specifically for particles
@@ -147,6 +148,6 @@ class SPH_PARTICLE_RECORD:
             return
         # define the data to be written
         json_payload = json.dumps(self.__dict__)
-        filename = saveIn + str(self.particle_id)
+        filename = saveIn + str(self.particle_id) + ".json"
         with open(filename,"w") as outfile:
             outfile.write(json_payload)

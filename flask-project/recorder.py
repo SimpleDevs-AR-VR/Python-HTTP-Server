@@ -36,6 +36,12 @@ def init():
     current_session.Initialize(payload)
     return jsonify(payload)
 
+@app.route("/terminate", methods=['POST'])
+def terminate():
+    # PURPOSE: ending a recording session and saving all files
+    current_session.Terminate(request.get_json())
+    return "Session terminated!"
+
 print("Running recorder.py server, skip to my lou, bibbity-bobbity-boo!")
 # To run: 
 # flask --app hello runexport 
