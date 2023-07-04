@@ -4,7 +4,7 @@ import json
 
 import time
 
-_HOST = "10.11.43.12"
+_HOST = "10.18.171.66"
 _PORT = 9999
 
 class NeuralHTTP(BaseHTTPRequestHandler):
