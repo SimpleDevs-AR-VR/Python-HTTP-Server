@@ -58,6 +58,24 @@ def update():
         })
     return "Session updated!"
 
+@app.route("/update_batch", methods=['POST'])
+def update_batch():
+    # PURPOSE: Update a batch of recordings. Each recording is agnostic to particle ID, as the items inside will indicate what particle they need to udpate
+    # insid the payload, we expect the following format:
+    # - batch : [{<LOOK AT update_particle() FOR REFERENCE ON STRUCTURE>}...]
+    payload = request.get_json();
+    for bi in payload["batch"]:
+        pi = int(bi["particle_id"])
+        current_session.data[pi].AddRecord({
+            "timestamp":bi["timestamp"],
+            "frame":bi["frame"],
+            "position":bi["position"],
+            "velocity":bi["velocity"],
+            "density":bi["density"],
+            "pressure":bi["pressure"]
+        })
+    return "Batch_Updated!"
+
 @app.route("/update_particle", methods=['POST'])
 def update_particle():
     # PURPOSE: update a single particle in our current session with their new position, velocity, density, and pressure
