@@ -54,13 +54,26 @@ class SPH_SESSION:
                 "pressure":p["pressure"]
             })
     
-    def Terminate(self, payload):
-        # Get the results from payload
-        self.results = {
-            "duration": payload["duration"],
-            "frames": payload["frames"],
-            "success": payload["success"]
-        }
+    def Self_Update(self, payload):
+        self.details["session_name"] = payload["session_name"]
+        self.details["timestamp"] = payload["timestamp"]
+
+        self.configurations["num_particles"] = payload["num_particles"]
+        self.configurations["dt"] = payload["dt"]
+        self.configurations["render_radius"] = payload["render_radius"]
+        self.configurations["h"] = payload["h"]
+        self.configurations["rest_density"] = payload["rest_density"]
+        self.configurations["mu"] = payload["mu"]
+        self.configurations["k"] = payload["k"]
+
+        if "duration" in payload:
+            self.results["duration"] = payload["duration"]
+        if "frames" in payload:
+            self.results["frames"] = payload["frames"]
+        if "success" in payload:
+            self.results["success"] = payload["success"]
+
+    def Save(self):
         # Create a directory inside of the "Recordings" directory, create "Recordings" if it doesn't exist
         os_dirname = os.path.dirname(os.path.abspath(__file__))
         recordingDirPath = os.path.join(os_dirname,"Recordings")

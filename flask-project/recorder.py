@@ -36,7 +36,7 @@ def init():
     current_session.Initialize(payload)
     return jsonify(payload)
 
-@app.route("/update", methods=['post'])
+@app.route("/update", methods=['POST'])
 def update():
     # PURPOSE: Update each particle in our current session with their new position, velocity, density, and pressure
     # Inside the payload, we are expecting the following formatting:
@@ -58,12 +58,38 @@ def update():
         })
     return "Session updated!"
 
+@app.route("/update_particle", methods=['POST'])
+def update_particle():
+    # PURPOSE: update a single particle in our current session with their new position, velocity, density, and pressure
+    # Inside the payload, we expect the following formatting:
+    # - particle_id : int
+    # - timestamp : float
+    # - frame : int
+    # - position : {x,y,z}
+    # - velocity: {x,y,z},
+    # - density : float
+    # - pressure : {x,y,z}
+    payload = request.get_json()
+    current_session.data[int(payload["particle_id"])].AddRecord({
+        "timestamp":payload["timestamp"],
+        "frame":payload["frame"],
+        "position":payload["position"],
+        "velocity":payload["velocity"],
+        "density":payload["density"],
+        "pressure":payload["pressure"]
+    })
+    return "Particle updated!"
 
+@app.route("/update_session", methods=['POST'])
+def update_session():
+    payload = request.get_json()
+    current_session.Self_Update(payload)
+    return "Session updated!"
 
-@app.route("/terminate", methods=['POST'])
-def terminate():
+@app.route("/save", methods=['Get'])
+def save():
     # PURPOSE: ending a recording session and saving all files
-    current_session.Terminate(request.get_json())
+    current_session.Save()
     return "Session terminated!"
 
 print("Running recorder.py server, skip to my lou, bibbity-bobbity-boo!")
