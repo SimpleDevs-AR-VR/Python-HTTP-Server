@@ -1,6 +1,7 @@
 import os
 import math
 import json
+import csv
 
 class SPH_SESSION:
     details = {
@@ -72,7 +73,7 @@ class SPH_SESSION:
         if "success" in payload:
             self.results["success"] = payload["success"]
 
-    def Save(self):
+    def Save(self,filetype="json"):
         # Create a directory inside of the "Recordings" directory, create "Recordings" if it doesn't exist
         os_dirname = os.path.dirname(os.path.abspath(__file__))
         recordingDirPath = os.path.join(os_dirname,"Recordings")
@@ -95,7 +96,10 @@ class SPH_SESSION:
         # Let's now save each individual particle recording
         for p in self.data:
             p.SortRecords()
-            p.SaveRecords(recordDirPath)
+            if (filetype == "csv"):
+                p.SaveCSV(recordDirPath)
+            else:
+                p.SaveJSON(recordDirPath)
     
     def GetSnapshot(self, start_index, end_index, include_particles=False):
         # Initialize return payload
@@ -125,15 +129,43 @@ class SPH_PARTICLE_RECORD:
     def AddRecord(self,payload):
         timestamp = payload["timestamp"]
         frame = payload["frame"]
-        self.values.append({
-            "timestamp":timestamp, "frame":frame, 
-            "value":payload["value"]
-        })
+        record = {
+            "particle_id":self.particle_id,
+            "timestamp":timestamp, 
+            "frame":frame,
+        }
+        if type(payload["value"]) is list or type(payload["value"]) is tuple:
+            record["x"] = payload["value"][0] if len(payload["value"])>=1 else 0
+            record["y"] = payload["value"][1] if len(payload["value"])>=2 else 0
+            record["z"] = payload["value"][2] if len(payload["value"])>=3 else 0
+        else:
+            record["x"] = payload["value"]
+            record["y"] = 0
+            record["z"] = 0
+        self.values.append(record)
     
     def SortRecords(self):
         self.values.sort(key=lambda x: x["frame"], reverse=False)
 
-    def SaveRecords(self,dirPath):
+    def SaveCSV(self,dirPath):
+        # Note that we expect dirPath to end with "/"
+        saveIn = dirPath
+        if not dirPath.endswith("/"):
+            saveIn += "/"            
+        # double-check that the path is valid
+        if not os.path.exists(saveIn):
+            print("ERROR [{}]: Directory path doesn't exist: {}".format(self.particle_id,saveIn))
+            return
+        # define the data to be written
+        filename = saveIn + str(self.particle_id) + ".csv"
+        header = ["particle_id", "timestamp", "frame","x", "y", "z"]
+        with open(filename, 'w', encoding='UTF8', newline='') as outfile:
+            writer = csv.writer(outfile)
+            writer.writerow(header)
+            for row in self.values:
+                writer.writerow(list(row.values()))
+
+    def SaveJSON(self,dirPath):
         # Note that we expect dirPath to end with "/"
         saveIn = dirPath
         if not dirPath.endswith("/"):

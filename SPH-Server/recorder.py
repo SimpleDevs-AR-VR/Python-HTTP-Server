@@ -108,7 +108,8 @@ def update_session():
 @app.route("/save", methods=['Get'])
 def save():
     # PURPOSE: ending a recording session and saving all files
-    current_session.Save()
+    filetype_query = request.args.get("filetype","json")
+    current_session.Save(filetype_query)
     return "Session terminated!"
 
 print("Running recorder.py server, skip to my lou, bibbity-bobbity-boo!")
